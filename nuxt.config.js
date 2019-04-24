@@ -21,7 +21,25 @@ export default {
                 content: pkg.description
             }
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+        script: [
+            {
+                defer: 'defer',
+                src: 'https://use.fontawesome.com/releases/v5.8.1/js/all.js',
+                integrity:
+                    'sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ',
+                crossorigin: 'anonymous'
+            }
+        ],
+        link: [
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            {
+                rel: 'stylesheet',
+                href: 'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+                integrity:
+                    'sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf',
+                crossorigin: 'anonymous'
+            }
+        ]
     },
     router: {
         middleware: 'router-auth',
