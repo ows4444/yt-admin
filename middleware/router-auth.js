@@ -3,7 +3,6 @@ export default function({ store, redirect, route }) {
     if (store.state.user == null && !isHomeRoute(route))
         if (store.state.user == null && !isVisiterRoute(route)) redirect('/')
 }
-
 // eslint-disable-next-line no-unused-vars
 function isAdminRoute(route) {
     return route.matched.some(record => record.path === '/admin')

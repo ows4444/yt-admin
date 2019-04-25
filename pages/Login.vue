@@ -18,13 +18,9 @@
                                 input.input(type='password', placeholder='Password')
                                 span.icon.is-small.is-left
                                     i.fas.fa-lock
-                        label.checkbox
-                            input(type="checkbox")
-                        | Remember me 
                         .field
-                        input#switchRoundedOutlinedDefault.switch.is-rounded.is-outlined(type='checkbox', name='switchRoundedOutlinedDefault', checked='checked')
-                        label(for='switchRoundedOutlinedDefault') Switch rounded outlined default
-
+                        b-switch(:value='true', type='is-success')
+                            | Success
                         button.button.is-primary.is-medium.is-fullwidth
                             span.icon.is-small
                                 i.fa.fa-user
