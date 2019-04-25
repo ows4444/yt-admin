@@ -13,14 +13,10 @@ const createStore = () => {
                 state.user = payload
                 state.Auth = !!payload
             },
-            setAll: (state, payload) =>
-                (state = { user: payload, token: payload, Auth: payload }),
             setToken: (state, payload) => (state.token = payload)
         },
         actions: {
             nuxtClientInit({ commit }) {
-                console.log('init')
-
                 return new Promise((resolve, reject) => {
                     auth.onAuthStateChanged(user => {
                         if (user) {
@@ -36,16 +32,29 @@ const createStore = () => {
                             })
                             resolve()
                         } else {
-                            commit('setAll', null)
+                            commit('setUser', null)
+                            commit('setToken', null)
                             resolve()
                         }
                     })
                 })
             },
             signIn({ commit }, { email, password }) {
+                console.log(email, password)
                 return new Promise((resolve, reject) => {
                     auth.signInWithEmailAndPassword(email, password)
-                        .then(resolve())
+                        .then(user => resolve(user))
+                        .catch(e => reject(e))
+                })
+            },
+            signOut({ commit }) {
+                return new Promise((resolve, reject) => {
+                    auth.signOut()
+                        .then(() => {
+                            commit('setUser', null)
+                            commit('setToken', null)
+                            resolve()
+                        })
                         .catch(e => reject(e))
                 })
             }
