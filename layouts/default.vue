@@ -1,5 +1,5 @@
 <template lang="pug">
-  .c
+  .container.is-fluid.is-widescreen
     nav.navbar(role='navigation', aria-label='main navigation')
       .navbar-brand
         router-link.navbar-item(to='/' tag="a")
@@ -29,51 +29,50 @@
                 strong Log in
     section(v-if="!IsLogged")
       nuxt 
-    section(v-if="IsLogged")
-      section.container
-        .columns
-          .column.is-3
-            aside.menu.is-hidden-mobile
-              p.menu-label
-                | 
-              ul.menu-list
-                li
-                  a.is-active Dashboard
-                li
-                  a Channels
-              //p.menu-label
-                | Administration
-              //ul.menu-list
-                li
-                  a Team Settings
-                li
-                  a Manage Your Team
-                  ul
-                    li
-                      a Members
-                    li
-                      a Plugins
-                    li
-                      a Add a member
-                li
-                  a Invitations
-                li
-                  a Cloud Storage Environment Settings
-                li
-                  a Authentication
-              //p.menu-label
-                | Transactions
-              //ul.menu-list
-                li
-                  a Payments
-                li
-                  a Transfers
-                li
-                  a Balance`
-
-          //.hero.is-fullheight.is-medium.is-primary.is-bold
-          .column.is-9
-            nuxt
+    .section(v-if="IsLogged")
+      .columns
+        aside.column.is-2
+          nav.menu
+            p.menu-label
+              | General
+            ul.menu-list
+              li
+                router-link(v-if="!isActive('Dashboard')" to="/Dashboard" tag="a") Dashboard
+                a(v-else :class="isActive('Dashboard')?'is-active':''") Dashboard
+              li
+                router-link(v-if="!isActive('Channels')" to="/Channels")  Channels
+                a(v-else :class="isActive('Channels')?'is-active':''")  Channels
+            //p.menu-label
+              | Administration
+            //ul.menu-list
+              li
+                a Team Settings
+              li
+                a Manage Your Team
+                ul
+                  li
+                    a Members
+                  li
+                    a Plugins
+                  li
+                    a Add a member
+              li
+                a Invitations
+              li
+                a Cloud Storage Environment Settings
+              li
+                a Authentication
+            //p.menu-label
+              | Transactions
+            //ul.menu-list
+              li
+                a Payments
+              li
+                a Transfers
+              li
+                a Balance
+        .column.is-10
+          nuxt
 </template>
 
 <script>
@@ -91,6 +90,9 @@ export default {
         },
         LoginPage() {
             return this.$route.name === 'Login'
+        },
+        PageName() {
+            return this.$route.name
         }
     },
     created() {},
@@ -102,6 +104,9 @@ export default {
             const This = this
             this.$store.dispatch('signOut').then(This.$router.push('/'))
             console.log('loging Out')
+        },
+        isActive(val) {
+            return val === this.$route.name
         }
     }
 }
