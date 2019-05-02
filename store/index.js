@@ -2,22 +2,30 @@ import Vuex from 'vuex'
 import { auth } from '~/plugins/firebase.js'
 const createStore = () => {
     return new Vuex.Store({
-        state: { user: null, token: null, Auth: false },
+        state: { user: null, token: null, Auth: false, api: '' },
         getters: {
             GetUser: (state, getters) => state.user,
             getToken: (state, getters) => state.token,
-            getAuth: (state, getters) => state.Auth
+            getAuth: (state, getters) => state.Auth,
+            getApi: (state, getters) => state.api
         },
         mutations: {
             setUser: (state, payload) => {
                 state.user = payload
                 state.Auth = !!payload
             },
-            setToken: (state, payload) => (state.token = payload)
+            setToken: (state, payload) => (state.token = payload),
+            setApi: (state, payload) => (state.api = payload)
         },
         actions: {
             nuxtClientInit({ commit }) {
                 return new Promise((resolve, reject) => {
+                    if (process.env.NODE_ENV === 'production')
+                        commit('setApi', process.env.NUXT_BUILD_API)
+
+                    if (process.env.NODE_ENV === 'development')
+                        commit('setApi', process.env.NUXT_DEV_API)
+
                     auth.onAuthStateChanged(user => {
                         if (user) {
                             user.getIdToken()
