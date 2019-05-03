@@ -1,5 +1,5 @@
 <template lang="pug">
-  .container.is-fluid.is-widescreen
+div
     nav.navbar(role='navigation', aria-label='main navigation')
       .navbar-brand
         router-link.navbar-item(to='/' tag="a")
@@ -27,11 +27,12 @@
                 strong Log Out
               router-link.button.is-primary(v-if="!IsLogged" :to="{ name:'Login'}" tag="button")
                 strong Log in
-    section(v-if="!IsLogged")
+    br
+    .container(v-if="!IsLogged")
       nuxt 
-    .section(v-if="IsLogged")
+    .container(v-if="IsLogged")
       .columns
-        aside.column.is-2
+        aside.column.is-2.is-hidden-mobile
           nav.menu
             p.menu-label
               | General
@@ -71,8 +72,7 @@
                 a Transfers
               li
                 a Balance
-        .column.is-10
-          nuxt
+        nuxt.column.is-10
 </template>
 
 <script>
