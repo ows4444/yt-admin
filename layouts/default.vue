@@ -1,6 +1,12 @@
 <template lang="pug">
 div
-    nav.navbar(role='navigation', aria-label='main navigation')
+
+  b-button Button
+  b-button(class="btn-danger") Button
+  b-button(class="success") Button
+  b-button(class="outline-primary") Button
+
+    //nav.navbar(role='navigation', aria-label='main navigation')
       .navbar-brand
         router-link.navbar-item(to='/' tag="a")
           img(src='https://bulma.io/images/bulma-logo.png', width='112', height='28')
@@ -27,13 +33,13 @@ div
                 strong Log Out
               router-link.button.is-primary(v-if="!IsLogged" :to="{ name:'Login'}" tag="button")
                 strong Log in
-    br
-    .container(v-if="!IsLogged")
+    //br
+    //.container(v-if="!IsLogged")
       nuxt 
-    .container(v-if="IsLogged")
+    //.container(v-if="IsLogged")
       .columns
-        aside.column.is-2.is-hidden-mobile
-          nav.menu
+        aside.column.is-2.is-hidden-mobile 
+          nav.menu#navbarBasicExampled
             p.menu-label
               | General
             ul.menu-list
