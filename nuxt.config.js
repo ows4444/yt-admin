@@ -39,14 +39,7 @@ export default {
                     'sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf',
                 crossorigin: 'anonymous'
             },
-            {
-                rel: 'stylesheet',
-                href:
-                    'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
-                integrity:
-                    'sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm',
-                crossorigin: 'anonymous'
-            }
+            { rel: 'stylesheet', src: '@/assets/main.sass', lang: 'sass' }
         ]
     },
     router: {
@@ -84,9 +77,16 @@ export default {
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
         // Doc:https://github.com/nuxt-community/modules/tree/master/packages/bulma
-        '@nuxtjs/bulma',
-        'nuxt-buefy'
+        // '@nuxtjs/bulma',
+        // 'nuxt-buefy',
+        // 'nuxt-sass-resources-loader'
+        '@nuxtjs/style-resources'
     ],
+
+    styleResources: {
+        scss: ['./assets/main.scss']
+    },
+
     /*
      ** Axios module configuration
      */
