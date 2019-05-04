@@ -37,6 +37,7 @@
                 .card-footer-item.button.is-info(@click="Reset") Reset
                 .card-footer-item.button.is-primary(@click="Search") Search
                 .card-footer-item.button.is-success(@click="Create") Create
+        br
         .columns
             .column.is-one-third.is-offset-one-third
                 .card
@@ -95,13 +96,11 @@ export default {
                 const key = data[1]
                 switch (type) {
                     case 'channel':
-                        this.$axios
-                            .post(
-                                `${this.$store.state.api}/get_channel_by_id`,
-                                {
-                                    ChannelId: key
-                                }
-                            )
+                        this.$store
+                            .dispatch('getChannelById', {
+                                ChannelId: key,
+                                axios: this.$axios
+                            })
                             .then(responce => {
                                 console.log(responce)
                             })

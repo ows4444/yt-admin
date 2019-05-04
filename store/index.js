@@ -2,12 +2,19 @@ import Vuex from 'vuex'
 import { auth } from '~/plugins/firebase.js'
 const createStore = () => {
     return new Vuex.Store({
-        state: { user: null, token: null, Auth: false, api: '' },
+        state: {
+            user: null,
+            token: null,
+            Auth: false,
+            api: '',
+            channelData: null
+        },
         getters: {
             GetUser: (state, getters) => state.user,
             getToken: (state, getters) => state.token,
             getAuth: (state, getters) => state.Auth,
-            getApi: (state, getters) => state.api
+            getApi: (state, getters) => state.api,
+            getchannelData: (state, getters) => state.channelData
         },
         mutations: {
             setUser: (state, payload) => {
@@ -15,7 +22,8 @@ const createStore = () => {
                 state.Auth = !!payload
             },
             setToken: (state, payload) => (state.token = payload),
-            setApi: (state, payload) => (state.api = payload)
+            setApi: (state, payload) => (state.api = payload),
+            setchannelData: (state, payload) => (state.channelData = payload)
         },
         actions: {
             nuxtClientInit({ commit }) {
@@ -64,6 +72,25 @@ const createStore = () => {
                             resolve()
                         })
                         .catch(e => reject(e))
+                })
+            },
+            getChannelById({ state, commit }, { ChannelId, axios }) {
+                return new Promise((resolve, reject) => {
+                    axios
+                        .post(`${state.api}/get_channel_by_id`, { ChannelId })
+                        .then(data => {
+                            if (data.data.status) {
+                                commit('setchannelData', data.data.data)
+                                resolve(data.data.data)
+                            } else {
+                                commit('setchannelData', null)
+                                reject(data.message)
+                            }
+                        })
+                        .catch(e => {
+                            commit('setchannelData', null)
+                            reject(e)
+                        })
                 })
             }
         }

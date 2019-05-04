@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  nav.navbar(role='navigation', aria-label='main navigation')
+  nav.navbar.has-background-white-bis(role='navigation', aria-label='main navigation')
     .navbar-brand
       router-link.navbar-item(to='/' tag="a")
         img(src='https://bulma.io/images/bulma-logo.png', width='112', height='28')
@@ -27,7 +27,6 @@ div
               strong Log Out
             router-link.button.is-primary(v-if="!IsLogged" :to="{ name:'Login'}" tag="button")
               strong Log in
-  br
   .container(v-if="!IsLogged")
     nuxt 
   .container.is-fluid.is-vcentered(v-if="IsLogged")
