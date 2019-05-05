@@ -33,54 +33,104 @@
                     p.control
                         button.button.is-info(@click="SearchByChannelI(channelId)")
                             | Search
-            .card-footer 
+            //.card-footer 
                 .card-footer-item.button.is-info(@click="Reset") Reset
                 .card-footer-item.button.is-primary(@click="Search") Search
                 .card-footer-item.button.is-success(@click="Create") Create
         br
         .columns
             .column.is-one-third.is-offset-one-third
-                .card
-                    .card-header 
-                        .card-header-title Create
+                .card.is-one-third.is-offset-one-third(v-if="channelData.snippet")
                     .card-image
                         figure.image.is-square
-                            img(src='https://yt3.ggpht.com/a/AGF-l7_gge57k2Ccvf5olvrsLhkpvIynXZ3dc5-6=s800-mo-c-c0xffffffff-rj-k-no', alt='Placeholder image')
+                            img(v-if="channelData.snippet" :src="channelData.snippet.thumbnails.high.url", alt='Placeholder image')
                     .card-content
-
-
+                        .media
+                            .media-left
+                                figure.image.is-48x48
+                                    img(v-if="channelData.snippet" :src="channelData.snippet.thumbnails.default.url", alt='Placeholder image')
+                            .media-content
+                                p.title.is-4(v-if="channelData.snippet") {{channelData.snippet.title}}
+                                    p.subtitle.is-6(v-if="channelData.snippet") @{{channelData.snippet.customUrl}}
+                        .content(v-if="channelData.snippet")
+                            |{{channelData.snippet.description}}  
+                            time {{FormatDate(channelData.snippet.publishedAt)}}
+                    footer.card-footer(v-if="!hasSaved")
+                        .field.has-addons.card-footer-item
+                            .control
+                                .select.is-fullwidth
+                                    select(v-model='ChannelType' :disabled="IsSaving")
+                                        option(value="") Select Type
+                                        option(v-for='option,key in List', v-bind:value='key') {{ key }}
+                            .control.is-expanded
+                                .select.is-fullwidth
+                                    select(v-model='ChannelOption' :disabled="IsSaving")
+                                        option(value="") Select Type
+                                        option(v-for='option in List[ChannelType]', v-bind:value='option') {{ option }}
+                            .control
+                                button.button(@click="Save" :class="IsSaving?'is-info is-loading':!ChannelType&&!ChannelOption ?'is-danger':'is-primary'" :disabled="!ChannelType") Save
 
 </template>
 <script>
+import moment from 'moment'
+
 export default {
     name: 'CreateChannel',
     meta: { admin: true },
     data() {
         return {
-            channelId:
-                'https://www.youtube.com/channel/UC8aqhu3jY6Q8B9n0a8l1_Qg',
+            channelId: 'https://www.youtube.com/user/geonews',
             videoId: 'https://www.youtube.com/watch?v=xQB0GDOIPYg',
             compId: '',
-            data: {}
+            data: { snippet: null },
+            IsSaving: false,
+            hasSaved: false,
+            List: null,
+            ChannelType: '',
+            ChannelOption: ''
         }
     },
+
+    computed: {
+        channelData() {
+            const data = this.$store.state.channelData
+            if (data) {
+                return data
+            }
+            return {}
+        }
+    },
+    async created() {
+        this.List = await this.$store.dispatch('getChannelTypes')
+    },
     methods: {
+        FormatDate(date) {
+            return moment().format('DD MMM YYYY')
+        },
         Reset() {
             this.channelId = ''
             this.videoId = ''
         },
-        Search() {
-            alert('Searching')
+        Save() {
+            this.IsSaving = true
+            this.$store
+                .dispatch('SaveChannel', { Channel: this.ChannelType, Type: this.ChannelOption, data: this.channelData, axios: this.$axios })
+                .then(() => {})
+                .catch(e => {
+                    console.log(e)
+                })
         },
-        Create() {
-            alert('Creating')
-        },
+
         SearchByVideoId(id) {
             let url
             try {
                 url = new URL(id)
-                const v = url.searchParams.get('v')
-                this.compId = v
+                const VideoId = url.searchParams.get('v')
+
+                this.$store.dispatch('getChannelByVideoId', {
+                    VideoId,
+                    axios: this.$axios
+                })
             } catch (e) {
                 this.compId = e
             }
@@ -96,25 +146,19 @@ export default {
                 const key = data[1]
                 switch (type) {
                     case 'channel':
-                        this.$store
-                            .dispatch('getChannelById', {
-                                ChannelId: key,
-                                axios: this.$axios
-                            })
-                            .then(responce => {
-                                console.log(responce)
-                            })
+                        this.$store.dispatch('getChannelById', {
+                            ChannelId: key,
+                            axios: this.$axios
+                        })
                         break
                     case 'user':
-                        this.$axios
-                            .post(
-                                `${this.$store.state.api}/get_channel_by_user`,
-                                {
-                                    ChannelUser: key
-                                }
-                            )
-                            .then(responce => {
-                                console.log(responce)
+                        this.$store
+                            .dispatch('getChannelByUser', {
+                                ChannelUser: key,
+                                axios: this.$axios
+                            })
+                            .catch(e => {
+                                console.log(e)
                             })
                         break
                 }

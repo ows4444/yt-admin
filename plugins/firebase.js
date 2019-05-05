@@ -10,8 +10,6 @@ const config = {
     storageBucket: process.env.NUXTstorageBucket,
     messagingSenderId: process.env.NUXTmessagingSenderId
 }
-export default (!firebase.apps.length
-    ? firebase.initializeApp(config)
-    : firebase.app())
+export default (!firebase.apps.length ? firebase.initializeApp(config) : firebase.app())
 export const db = firebase.firestore()
 export const auth = firebase.auth()
